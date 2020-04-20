@@ -3,6 +3,7 @@ from language_model import Ngram
 from lattice import Lattice
 import os
 from tqdm import tqdm
+import argparse
 
 class JSC(object):
     def __init__(self, path, n):
@@ -78,15 +79,18 @@ class JSC(object):
         self.model.save(self.data_dir)
 
 if __name__ == '__main__':
-    jsc = JSC('vocab', 1)
-    #jsc.load_trained_file()
+    parser = argparse.ArgumentParser(description='Build model files')
+    parser.add_argument('--vocab', type=str, help="specify vocab file")
+    parser.add_argument('--ngram', type=int, help="specify ngram length")
+    parser.add_argument('--train', type=str, help="specify train file")
+    parser.add_argument('--load', action="store_true", help="specify train file")
+    args = parser.parse_args()
+    jsc = JSC(args.vocab, args.ngram)
+    if args.load:
+        jsc.load_trained_file()
     print('finish_load')
-    jsc.create_dst_list('sample.txt')
-    print(jsc.decode('大腸性下痢便'))
-    print(jsc.decode('細菌性赤痢'))
-    print(jsc.decode('肺外結核'))
-    print(jsc.decode('結核病変', '結核'))
-    jsc.train('sample.txt')
+    jsc.create_dst_list(args.train)
+    jsc.train(args.train)
     print('finish training')
     while True:
         word = input()

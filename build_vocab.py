@@ -1,6 +1,7 @@
 import dartsclone
 import os
 import itertools
+import argparse
 
 def build_vocab(fn, window, outputdir):
     if not os.path.isdir(outputdir):
@@ -29,11 +30,6 @@ def build_vocab(fn, window, outputdir):
                 if idx + w + 1 > len(dst):
                     break
                 d.append(dst[idx:idx+w+1])
-
-        if src == '結核病変':
-            print(s)
-            print(d)
-            print(set(itertools.product(s, d+[''])))
 
         pair_vocab |= set(itertools.product(s, d+['']))
         #pair_vocab |= set(itertools.product(s, d))
@@ -77,5 +73,10 @@ def build_vocab(fn, window, outputdir):
         f.write('\n'.join(offset))
 
 if __name__ == "__main__":
-    build_vocab('sample.txt', 4, 'vocab')
+    parser = argparse.ArgumentParser(description='Build vocaburaly files')
+    parser.add_argument('--input', type=str, help="specify source file")
+    parser.add_argument('--len', type=int, help="specify subword length")
+    parser.add_argument('--output', type=str, help="specify output directory")
+    args = parser.parse_args()
+    build_vocab(args.input, args.len, args.output)
 
