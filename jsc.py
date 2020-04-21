@@ -20,7 +20,6 @@ class JSC(object):
 
         dst = [line[1] for line in lines]
         self.normal_list = dst
-        print(self.normal_list)
         self.dst_list = ['']
         for d in dst:
             for i in range(len(d)):
@@ -78,6 +77,27 @@ class JSC(object):
             cost_his.append(all_cost)
         self.model.save(self.data_dir)
 
+    def predict(self, fn):
+        with open(fn, 'r') as f:
+            lines = [line.split('\t') for line in f.read().split('\n') if line != '']
+            true = [line[0] for line in lines]
+            src = [line[1] for line in lines]
+
+        output = ['出現形\t正解\t予測']
+        total = 0
+        cnt = 0
+        for t, s in tqdm(zip(true, src)):
+            src_, dst_, path, cost = self.decode(s)
+            dst_ = dst_.replace(' ', '')
+            output.append('\t'.join([s, t, dst_]))
+
+            if dst_ == t:
+                cnt += 1
+            total += 1
+        print(cnt / total)
+        with open('result.txt', 'w') as f:
+            f.write('\n'.join(output))
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Build model files')
     parser.add_argument('--vocab', type=str, help="specify vocab file")
@@ -90,7 +110,11 @@ if __name__ == '__main__':
         jsc.load_trained_file()
     print('finish_load')
     jsc.create_dst_list(args.train)
+    """
+    jsc.predict('test.txt')
+
     jsc.train(args.train)
+    """
     print('finish training')
     while True:
         word = input()
