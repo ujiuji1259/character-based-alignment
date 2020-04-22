@@ -106,7 +106,7 @@ class Ngram(object):
     def EM_train(self, token_list):
         self.clear()
         for tokens in token_list:
-            tokens = tuple([self.BOS_id]*(self.n-1) + tokens)
+            tokens = tuple([self.BOS_id]*(self.n-1) + list(tokens))
             for i in range(self.n, len(tokens)+1):
                 n = self.ngram_iton[tokens[i-self.n:i]]
                 n.cost += self.prob[n.pair_ids]
