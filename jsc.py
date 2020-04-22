@@ -201,7 +201,7 @@ if __name__ == '__main__':
         jsc.load_trained_file()
     print('finish_load')
     jsc.create_dst_list(args.train)
-    #jsc.initial_cost(args.train, 'splited_nbest_train.txt')
+    jsc.initial_cost(args.train, 'large_splited_nbest_train.txt')
     #jsc.predict('test.txt')
 
     #jsc.train_nbest(args.train)
